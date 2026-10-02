@@ -24,7 +24,22 @@ export default function Home() {
   };
 
   useEffect(() => {
-    fetchUsers();
+    let ignore = false;
+
+    const loadUsers = async () => {
+      const response = await fetch("/api/users");
+      const data = await response.json();
+
+      if (!ignore && data.success) {
+        setUsers(data.users);
+      }
+    };
+
+    loadUsers();
+
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   const handleSubmit = async (e: FormEvent) => {
